@@ -25,8 +25,6 @@ public class OperatorController {
         operator.setSurname("server-surname");
         operator.setRole("manager");
 
-        operatorService.save(operator);
-
         return operator;
     }
 
