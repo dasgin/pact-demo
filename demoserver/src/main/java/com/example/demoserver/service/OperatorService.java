@@ -10,6 +10,10 @@ public class OperatorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(OperatorService.class);
 
+    public Operator getOperatorById(Long id) {
+        return null;
+    }
+
     public boolean save(Operator operator) {
         LOGGER.info("saved: " + operator);
         return true;

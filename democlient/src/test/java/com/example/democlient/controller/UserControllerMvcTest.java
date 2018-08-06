@@ -2,7 +2,7 @@ package com.example.democlient.controller;
 
 import com.example.democlient.domain.User;
 import com.example.democlient.domain.builder.UserBuilder;
-import com.example.democlient.service.UserFetcherService;
+import com.example.democlient.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ public class UserControllerMvcTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserFetcherService userFetcherService;
+    private UserService userService;
 
     @Test
     public void it_should_get_user_info_by_user_id() throws Exception {
         // Given
         User expectedUser = UserBuilder.anUser().name("username").surname("surname").id(1L).role("developer").build();
-        given(userFetcherService.fetchUser(1L)).willReturn(expectedUser);
+        given(userService.fetchUser(1L)).willReturn(expectedUser);
 
         // When
         mockMvc.perform(get("/users/1").contentType(MediaType.APPLICATION_JSON))

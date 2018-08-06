@@ -1,7 +1,7 @@
 package com.example.democlient.controller;
 
 import com.example.democlient.domain.User;
-import com.example.democlient.service.UserFetcherService;
+import com.example.democlient.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @Autowired
-    private final UserFetcherService userFetcherService;
+    private final UserService userService;
 
-    public UserController(UserFetcherService userFetcherService) {
-        this.userFetcherService = userFetcherService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/{userId}")
     public User fetchUserBy(@PathVariable Long userId) {
-        return userFetcherService.fetchUser(userId);
+        return userService.fetchUser(userId);
     }
 }

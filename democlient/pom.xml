@@ -55,6 +55,26 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <pact.rootDir>target/pacts</pact.rootDir>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>au.com.dius</groupId>
+                <artifactId>pact-jvm-provider-maven_2.11</artifactId>
+                <version>3.5.20</version>
+                <configuration>
+                    <pactDirectory>target/pacts</pactDirectory>
+                    <pactBrokerUrl>http://localhost:80</pactBrokerUrl>
+                    <projectVersion>${project.version}</projectVersion>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

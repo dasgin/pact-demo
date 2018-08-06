@@ -7,18 +7,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class UserFetcherService {
+public class UserService {
 
     @Value("${demo.server.path}")
     private String serverPath;
 
     private final RestTemplate restTemplate;
 
-    public UserFetcherService(RestTemplateBuilder restTemplateBuilder) {
+    public UserService(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
     }
 
     public User fetchUser(Long userId) {
-        return restTemplate.getForObject(serverPath +"/operators/{userId}", User.class, userId);
+        return restTemplate.getForObject(serverPath + "/operators/{userId}", User.class, userId);
+    }
+
+    public void createUser(User user) {
+        restTemplate.postForEntity(serverPath + "/operators", user, Void.class);
     }
 }

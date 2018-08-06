@@ -8,20 +8,26 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.response.MockRestResponseCreators;
+
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(SpringRunner.class)
-@RestClientTest(UserFetcherService.class)
-public class UserFetcherServiceTest {
+@RestClientTest(UserService.class)
+public class UserServiceTest {
 
     @Autowired
-    private UserFetcherService service;
+    private UserService service;
 
     @Autowired
     private MockRestServiceServer server;
@@ -43,4 +49,21 @@ public class UserFetcherServiceTest {
         assertThat(actualUser).isEqualTo(expectedUser);
     }
 
+    @Test
+    public void it_should_save_user() throws JsonProcessingException {
+        //given
+        User user = UserBuilder.anUser().id(1L).name("name").surname("surname").role("developer").build();
+        String string = objectMapper.writeValueAsString(user);
+
+        server.expect(requestTo("/operators"))
+                .andExpect(method(HttpMethod.POST))
+                .andExpect(content().string(string))
+                .andRespond(MockRestResponseCreators.withCreatedEntity(URI.create("/operators")));
+
+        //when
+        service.createUser(user);
+
+        //then
+        server.verify();
+    }
 }
