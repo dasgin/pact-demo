@@ -1,5 +1,6 @@
 package com.example.democlient.service;
 
+import com.example.democlient.configuration.RestTemplateConfiguration;
 import com.example.democlient.domain.User;
 import com.example.democlient.domain.builder.UserBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
@@ -18,6 +20,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RunWith(SpringRunner.class)
 @RestClientTest(UserFetcherService.class)
+@Import(RestTemplateConfiguration.class)
 public class UserFetcherServiceTest {
 
     @Autowired
