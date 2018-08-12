@@ -1,7 +1,7 @@
 package com.example.democlient.controller;
 
 import com.example.democlient.domain.User;
-import com.example.democlient.domain.builder.UserBuilder;
+import com.example.democlient.builder.UserBuilder;
 import com.example.democlient.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

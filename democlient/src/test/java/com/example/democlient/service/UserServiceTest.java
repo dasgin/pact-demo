@@ -1,49 +1,36 @@
 package com.example.democlient.service;
 
 import com.example.democlient.domain.User;
-import com.example.democlient.model.request.UserFilterRequest;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.democlient.model.request.UserCreateRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
-import java.util.List;
-
-import static com.example.democlient.domain.builder.UserBuilder.anUser;
+import static com.example.democlient.builder.UserBuilder.anUser;
+import static com.example.democlient.builder.UserCreateRequestBuilder.anUserCreateRequest;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.BDDAssertions.then;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 
-@RunWith(SpringRunner.class)
-@RestClientTest(UserService.class)
+@RunWith(MockitoJUnitRunner.class)
 public class UserServiceTest {
 
-    @Autowired
+    @InjectMocks
     private UserService service;
 
-    @Autowired
-    private MockRestServiceServer server;
+    @Mock
+    private RestTemplate restTemplate;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
-    public void it_should_process_on_fetched_data() throws JsonProcessingException {
+    public void it_should_process_on_fetched_data() {
         // Given
         User expectedUser = anUser().id(1L).name("name").surname("surname").role("developer").build();
-        String userJson = objectMapper.writeValueAsString(expectedUser);
-        server.expect(requestTo("/operators/1")).andRespond(withSuccess(userJson, MediaType.APPLICATION_JSON));
+        given(restTemplate.getForObject("/operators/{userId}", User.class, 1L))
+                .willReturn(expectedUser);
 
         // When
         User actualUser = service.fetchUser(1L);
@@ -53,39 +40,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void it_should_save_user() throws JsonProcessingException {
+    public void it_should_save_user() {
         //given
-        User user = anUser().id(1L).name("name").surname("surname").role("developer").build();
-        String string = objectMapper.writeValueAsString(user);
+        UserCreateRequest userCreateRequest = anUserCreateRequest().name("name").surname("surname").role("developer").build();
 
-        server.expect(requestTo("/operators"))
-                .andExpect(method(HttpMethod.POST))
-                .andExpect(content().string(string))
-                .andRespond(MockRestResponseCreators.withCreatedEntity(URI.create("/operators")));
 
         //when
-        service.createUser(user);
+
+        service.createUser(userCreateRequest);
 
         //then
-        server.verify();
-    }
-
-    @Test
-    public void it_should_filter_users() throws JsonProcessingException {
-        //given
-        User user1 = anUser().id(1L).name("name1").surname("surname").role("developer").build();
-        User user2 = anUser().id(2L).name("name2").surname("surname").role("manager").build();
-        User user3 = anUser().id(3L).name("name3").surname("surname").role("developer").build();
-
-        User[] users = {user1, user3};
-        String usersJson = objectMapper.writeValueAsString(users);
-
-        server.expect(requestTo("/operators?role=developer")).andRespond(withSuccess(usersJson, MediaType.APPLICATION_JSON));
-
-        //when
-        List<User> developers = service.filterUsers(new UserFilterRequest("developer"));
-
-        //then
-        then(developers).containsExactly(user1, user3);
+        verify(restTemplate).postForEntity("/operators", userCreateRequest, Void.class);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.democlient.domain.builder;
+package com.example.democlient.builder;
 
 import com.example.democlient.domain.User;
 

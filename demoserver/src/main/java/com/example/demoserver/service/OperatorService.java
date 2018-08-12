@@ -1,12 +1,9 @@
 package com.example.demoserver.service;
 
 import com.example.demoserver.domain.Operator;
-import com.example.demoserver.model.request.OperatorFilterRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class OperatorService {
@@ -20,9 +17,5 @@ public class OperatorService {
     public boolean save(Operator operator) {
         LOGGER.info("saved: " + operator);
         return true;
-    }
-
-    public List<Operator> filterOperators(OperatorFilterRequest operatorFilterRequest) {
-        return null;
     }
 }

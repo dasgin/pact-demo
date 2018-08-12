@@ -1,3 +1,4 @@
 demo:
   server:
-    path:  ""
+    path:  http://localhost
+    port:  9090
