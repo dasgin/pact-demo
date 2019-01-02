@@ -1,14 +1,18 @@
 package com.example.demoserver.controller;
 
+import com.example.demoserver.domain.Operator;
+import com.example.demoserver.service.OperatorService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,9 +24,19 @@ public class OperatorControllerMvcTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockBean
+    private OperatorService operatorService;
+
     @Test
     public void it_should_get_user_info_by_user_id() throws Exception {
         // When
+        Operator operator = new Operator();
+        operator.setId(1L);
+        operator.setName("server-name");
+        operator.setRole("manager");
+        operator.setSurname("server-surname");
+
+        given(operatorService.getOperatorById(1L)).willReturn(operator);
         mockMvc.perform(get("/operators/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
