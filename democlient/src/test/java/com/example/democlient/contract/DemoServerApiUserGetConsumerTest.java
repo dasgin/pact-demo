@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoServerApiUserGetContractIT {
+public class DemoServerApiUserGetConsumerTest {
 
     @Autowired
     private UserService userService;
@@ -30,14 +30,19 @@ public class DemoServerApiUserGetContractIT {
     @Rule
     public PactProviderRuleMk2 mockProvider = new PactProviderRuleMk2("test_demoserver", "localhost", 9090, this);
 
+    @Before
+    public void setUp() throws InterruptedException {
+        Thread.sleep(2000);
+    }
+
     @Pact(consumer = "test_democlient")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
         return builder
-                .given("test GET")
-                .uponReceiving("GET REQUEST")
+                .given("get statement")
+                .uponReceiving("Get Request for Operators")
                 .path("/operators/1")
                 .method("GET")
                 .willRespondWith()
@@ -45,11 +50,6 @@ public class DemoServerApiUserGetContractIT {
                 .headers(headers)
                 .body("{\"id\":1,\"name\":\"server-name\",\"surname\":\"server-surname\",\"role\":\"admin\"}")
                 .toPact();
-    }
-
-    @Before
-    public void setUp() throws InterruptedException {
-        Thread.sleep(2000);
     }
 
     @Test

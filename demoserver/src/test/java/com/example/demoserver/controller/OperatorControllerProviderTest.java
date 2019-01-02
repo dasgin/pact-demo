@@ -14,13 +14,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.example.demoserver.domain.builder.OperatorBuilder.anOperator;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRestPactRunner.class)
 @Provider("test_demoserver")
 @PactBroker(host = "localhost", port = "80")
 @Consumer("test_democlient")
-public class OperatorControllerIT {
+public class OperatorControllerProviderTest {
 
     @TestTarget
     public MockMvcTarget mockMvcTarget = new MockMvcTarget();
@@ -36,18 +37,21 @@ public class OperatorControllerIT {
         mockMvcTarget.setControllers(operatorController);
     }
 
-    @State("test GET")
+    @State("get statement")
     public void it_should_return_operator_info() {
-        Operator operator = new Operator();
-        operator.setId(1L);
-        operator.setName("server-name");
-        operator.setSurname("server-surname");
-        operator.setRole("admin");
+        Operator operator = anOperator()
+                .id(1L)
+                .name("server-name")
+                .surname("server-surname")
+                .role("admin")
+                .build();
+
         given(operatorService.getOperatorById(1L))
                 .willReturn(operator);
     }
 
-    @State("test POST")
+    @State("post statement")
     public void it_should_save_operator() {
+        //no setup needed
     }
 }

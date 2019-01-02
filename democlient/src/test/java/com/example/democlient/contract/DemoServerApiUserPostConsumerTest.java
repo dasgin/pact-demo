@@ -3,12 +3,12 @@ package com.example.democlient.contract;
 import au.com.dius.pact.consumer.Pact;
 import au.com.dius.pact.consumer.PactProviderRuleMk2;
 import au.com.dius.pact.consumer.PactVerification;
+import au.com.dius.pact.consumer.dsl.PactDslJsonArray;
+import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
 import au.com.dius.pact.consumer.dsl.PactDslWithProvider;
 import au.com.dius.pact.model.RequestResponsePact;
 import com.example.democlient.model.request.UserCreateRequest;
 import com.example.democlient.service.UserService;
-import org.apache.http.client.fluent.Executor;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static com.example.democlient.builder.UserCreateRequestBuilder.anUserCrea
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class DemoServerApiUserPostContractIT {
+public class DemoServerApiUserPostConsumerTest {
 
     @Autowired
     private UserService userService;
@@ -47,12 +47,17 @@ public class DemoServerApiUserPostContractIT {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
 
+        PactDslJsonBody body = new PactDslJsonBody()
+                .stringValue("name", "client-name")
+                .stringValue("surname", "client-surname")
+                .stringValue("role", "developer");
+
         return builder
-                .given("test POST")
-                .uponReceiving("POST REQUEST")
+                .given("post statement")
+                .uponReceiving("Post Requests for Operator")
                 .method("POST")
                 .headers(headers)
-                .body("{\"name\":\"client-name\",\"surname\":\"client-surname\",\"role\":\"developer\"}")
+                .body(body)
                 .path("/operators")
                 .willRespondWith()
                 .status(201)

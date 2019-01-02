@@ -6,7 +6,7 @@ public final class OperatorBuilder {
     private Long id;
     private String name;
     private String surname;
-    private String jobDescription;
+    private String role;
 
     private OperatorBuilder() {
     }
@@ -30,8 +30,8 @@ public final class OperatorBuilder {
         return this;
     }
 
-    public OperatorBuilder jobDescription(String jobDescription) {
-        this.jobDescription = jobDescription;
+    public OperatorBuilder role(String role) {
+        this.role = role;
         return this;
     }
 
@@ -40,7 +40,7 @@ public final class OperatorBuilder {
         operator.setId(id);
         operator.setName(name);
         operator.setSurname(surname);
-        operator.setRole(jobDescription);
+        operator.setRole(role);
         return operator;
     }
 }
